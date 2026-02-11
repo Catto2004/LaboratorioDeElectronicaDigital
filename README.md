@@ -1,1 +1,1 @@
-# LaboratorioDeElectronicaDigital
+# Laboratorio De Electronica Digital
