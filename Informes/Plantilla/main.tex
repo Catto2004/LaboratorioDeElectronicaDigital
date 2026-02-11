@@ -1,0 +1,262 @@
+% --- Librerías para el texto ---
+\documentclass{replab}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{lastpage}
+\usepackage[spanish,english]{babel}
+\usepackage{changepage}
+\usepackage{lettrine}
+\usepackage{ragged2e}
+\usepackage[T1]{fontenc}
+\usepackage{enumitem}
+\usepackage{palatino}
+\usepackage[font=small,labelfont=bf,labelsep=space]{caption}
+\usepackage{upgreek}
+\usepackage{cancel}
+\usepackage{amsmath}
+\usepackage{mathdots}
+\usepackage{xcolor}
+\usepackage{mathrsfs}
+\usepackage{stackrel}
+\usepackage{type1ec}
+\usepackage{type1cm}
+\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage{wasysym}
+\usepackage{enumerate}
+\usepackage{adjustbox}
+\usepackage[dvipsnames,svgnames,table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsbsy}
+\usepackage{amsthm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{textcomp}
+\usepackage{tcolorbox}
+\tcbuselibrary{listingsutf8}
+\tcbuselibrary{theorems}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{rgb}{0.0, 0.0, 0.6}
+\definecolor{codegray}{rgb}{0.5, 0.5, 0.5}
+\definecolor{codegreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{backcolor}{rgb}{0.95, 0.95, 1.0}
+
+\lstdefinestyle{systemverilog}{
+    language=Verilog,
+    backgroundcolor=\color{backcolor},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codegray},
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    stepnumber=1,
+    numbersep=10pt,
+    tabsize=4,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    captionpos=b
+}
+
+% --- Información del documento ---
+\title{Práctica Nº4}
+\author{\textbf{Tutor:} Ing. J. O. Sánchez -R
+\thanks{Aunque esta plantilla es obra del autor, el texto utilizado para mostrar la disposición del documento es una adaptación del artículo en \autocite{bhandari-2022}.}}
+
+\date{\today}
+\subtitle={Flip -Flops}
+\email={\href{mailto:icarous@utp.edu.co}{\color{principaluno}\texttt{icarous@utp.edu.co}}}
+\subject={Cátedra de Laboratorio Fundamentos de Electrónica}
+
+\setlength{\columnsep}{14pt}
+
+% --- Archivo de bibliografía ---
+\addbibresource{repbib.bib}
+
+% --- Inicio del documento ---
+\begin{document}
+	
+\pagestyle{fancy}
+\unspacedoperators
+	
+% --- Título ---
+\twocolumn[
+ \begin{center}
+  \maketitle
+  {\begin{tcolorbox}[colframe=white, colback=principaldos, arc=8pt]
+				
+\begin{onecolabstract}
+Este documento contiene informeación referente el análisis de circuitos con basculadores (Flip-Flops), para evaluar el comportamiento de las configuraciones tipo [SR, JK, D, T] como las bases para las memorias de datos, teniendo cuenta las configuraciones PIPO, PISO, SISO, SIPO.
+
+\medskip
+\noindent\textit{\textbf{Palabras clave:}} Flip-flops, tablas de estados comportamiento, SR, JK, D, T, configuraciones PIPO, PISO, SISO, SIPO.
+\end{onecolabstract}
+
+\tcblower
+ \selectlanguage{english}
+\begin{onecolabstract}
+This document contains information regarding the analysis of circuits with flip-flops,
+to evaluate the behavior of configurations such as [SR, JK, D, T] as the basis for
+data memories, taking into account the PIPO, PISO, SISO, and SIPO configurations.
+
+\medskip
+\noindent\textit{\textbf{Keywords:}} Flip-flops, state tables, SR, JK, D, T, configurations, PIPO, PISO, SISO, SIPO
+\end{onecolabstract}
+   \end{tcolorbox}}
+  \smallskip
+\end{center}
+]
+
+\selectlanguage{spanish}
+	
+% --- Cuerpo del reporte ---
+\section{Introducción}
+
+Los Flip-Flops o basculadores son dispositivos electrónicos digitales fundamentales utilizados para el almacenamiento de información binaria dentro de sistemas computacionales. Estos dispositivos permiten conservar estados lógicos añtos y bajos dependiendo los flancos entre valores [\textbf{0} = maxterm = bajo, \textbf{1} = maxterm = alto] y modificarlo en función de señales de control, por lo que son esenciales en el diseño de memorias, contadores, registros y máquinas de estado. El estudio de los diferentes tipos de Flip-Flops, su funcionamiento y sus aplicaciones permite comprender la base del procesamiento secuencial en electrónica digital.
+
+En este informe se analizan los principales tipos de Flip-Flops, sus características, tablas de estados lógicos y posibles implementaciones en circuitos digitales. Además; se incluyen esquemas que ilustran la estructura interna y el comportamiento de cada uno de ellos.
+
+Este documento está organizado para el lector de la siguiente manera: \textbf{Sección 1} - Introducción, \textbf{Sección 2} - Conceptos, \textbf{Sección 3} - Análisis y resultados, \textbf{Sección 4} - Conclusiones, \textbf{Sección 5} - Referencias.
+
+
+\vspace{0.3cm}
+
+\section{Conceptos}
+
+\subsection{Flip-Flops}
+Un Flip-Flop o basculador es un dispositivo electrónicos con dos estados [A-Estable, Bi-Estable] que se utiliza como la unidad de memoria más básica en la electrónica digital, capaz de almacenar un solo bit de información binaria.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Imágenes/Práctica/f1.png}
+    \caption{Flip-Flops}
+    \label{fig:etiqueta}
+\end{figure}
+
+\subsubsection{Tipos}
+
+\subsubsection{Tablas de Estados de comportamiento}
+Qué son las tablas de estados reset, set, retención, indeterminado?
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Imágenes/Práctica/f2.png}
+    \caption{Tipos Flip-Flops}
+    \label{fig:etiqueta}
+\end{figure}
+
+\subsubsection{FF SR}
+¿Qué es FF SR?.
+
+\subsubsection{FF SR}
+¿Qué es FF JK?.
+
+\subsubsection{FF D}
+¿Qué es FF D?.
+
+\subsubsection{FF T}
+¿Qué es FF JK?.
+
+\subsection{Configuraciones}
+¿Qué son las configuraciones y para que sirven en memorias y contadores?
+
+\subsubsection{Clúster PIPO}
+Poner definición breve... Con gráficos.
+
+\subsubsection{Clúster PISO}
+Poner definición breve... Con gráficos.
+
+\subsubsection{Clúster SISO}
+Poner definición breve... Con gráficos.
+
+\subsubsection{Clúster SIPO}
+Poner definición breve... Con gráficos.
+
+\newpage
+\section{Análisis y Resultados}
+
+Aquí empieza a colocar las imágenes del desarrollo de los circuitos sin carreta, el código utilizado y las simulaciones con los debidos argumentos breves.
+
+Con éste código se insertan imágenes.
+
+\begin{equation}
+ \label{EQ:Ec1}
+  \begin{split}
+   m_{\rho} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+  \end{split}
+\end{equation}
+
+Código para anexar en látex para anexar el verilog.
+
+\begin{lstlisting}[style=systemverilog, caption=HDL - NOT, basicstyle=\footnotesize\ttfamily, numbers=none]
+//Compuerta NOT
+module not_gate(
+  input Xa,
+  output Y
+);
+  assign Y = ~Xa;
+endmodule
+\end{lstlisting}
+
+\textbf{\textcolor{red}{Nota}}: Incluya para cada circuito de las configuraciones (PIPO, PISO, SISO, SIPO) las tablas de comportamiento de estados obtenidas.
+
+Código para tablas de estado lógico
+\subsubsection*{Tabla Estados Lógicos}
+
+\begin{center}
+\begin{tabular}{c c | c}
+S & R & Q(next) \\
+\hline
+0 & 0 & Q(prev) \\
+0 & 1 & 0 \\
+1 & 0 & 1 \\
+1 & 1 & \text{Indeterminado} \\
+\end{tabular}
+\end{center}
+
+O éste otro modelo si lo prefiere
+\begin{table}[H]
+\centering
+\begin{tblr}{
+    colspec = {|c|c|c|c|c|},
+    hlines
+}
+\textbf{A} & \textbf{B} & \textbf{$C_{in}$} & \textbf{Suma} & \textbf{$C_{out}$} \\
+0011 & 0101 & 0 & 1000 & 0 \\
+1111 & 0001 & 0 & 0000 & 1 \\
+\end{tblr}
+\caption{Resultados de suma}
+\end{table}
+
+\section{Conclusiones}
+Las concluisones van numeradas, no tiradas, fuera de eso las conclusiones van en (VERBOS EN FUTURO).
+
+\begin{enumerate}
+  \item Se evidenció qué...
+  \item Validamos qué...
+  \item El experimento demostró qué...
+  \item Se colocan al menos [5] conclusiones con análisis de ingeniero.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\bibitem{b1} Electricidad y electrónica 2010 - Autor: Agustín Rela - ISBN: C1229ACE - MinEducación Argentina - INET Saavedra - Buenos Aires Argentina - Pág 33 - 55.
+\bibitem{b2} Fundamentos de circuitos eléctricos - Autor: Charles K.Alexander / Matthew N. O. Sadiku - ISBN: 978-607-15-0948-2 - McGraw-Hill México - Pág 199.
+\bibitem{b3} Máquinas eléctricas - Autor: Stephen J.Chapman - ISBN: 978-607-15-0724-2 - McGraw-Hill México - Pág 205 - 219.
+\end{thebibliography}
+
+\vspace{9cm}
+\begin{figure}[H]
+ \centering
+   \includegraphics[width=0.2\linewidth]{Imágenes/Institucional/Logo-UTP.png}
+\end{figure}
+
+\end{document}
